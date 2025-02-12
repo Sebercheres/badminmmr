@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Dashboard</title>
+</head>
+<body>
+    <h1>Club Dashboard</h1>
+    <p>Welcome, {{ club.name }}!</p>
+
+    <!-- Online Members -->
+    <h2>Online Members</h2>
+    <ul>
+        {% for member in online_members %}
+            <li>{{ member.username }} (MMR: {{ member.mmr }}, Played: {{ member.played_count }} times)</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Create Random Match Button -->
+    <form action="{% url 'create_random_match' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Create Random Match</button>
+    </form>
+
+    <!-- Match Score Forms -->
+    <h2>Matches</h2>
+    {% for match in matches %}
+        <div>
+            <h3>Match: {{ match.team1 }} (Average MMR: {{ match.team1.average_mmr }}) vs {{ match.team2 }} (Average MMR: {{ match.team2.average_mmr }})</h3>
+            <form action="{% url 'record_match_result' match.id %}" method="post">
+                {% csrf_token %}
+                <label for="team1_score_{{ match.id }}">Team 1 Score:</label>
+                <input type="number" id="team1_score_{{ match.id }}" name="team1_score" required>
+                <br>
+                <label for="team2_score_{{ match.id }}">Team 2 Score:</label>
+                <input type="number" id="team2_score_{{ match.id }}" name="team2_score" required>
+                <br>
+                <button type="submit">Submit Score</button>
+            </form>
+        </div>
+    {% empty %}
+        <p>No matches available.</p>
+    {% endfor %}
+
+    <!-- Match History -->
+    <h2>Match History</h2>
+    {% for match in match_history %}
+        <div>
+            <h3>Match: {{ match.team1 }} (Average MMR: {{ match.team1.average_mmr }}) vs {{ match.team2 }} (Average MMR: {{ match.team2.average_mmr }})</h3>
+            <p>Score: {{ match.team1_score }} - {{ match.team2_score }}</p>
+            <p>Winner: {{ match.winner }}</p>
+        </div>
+    {% empty %}
+        <p>No match history available.</p>
+    {% endfor %}
+
+    <!-- Logout Button -->
+    <form action="{% url 'user_logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+</body>
+</html>

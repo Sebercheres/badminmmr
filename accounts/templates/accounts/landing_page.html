@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+</head>
+<body>
+    <h1>Welcome to the MMR Matchmaking System</h1>
+    <p>Please log in or register to continue.</p>
+
+    <h2>Login</h2>
+    <a href="{% url 'user_login' %}">
+        <button>Login as User</button>
+    </a>
+    <a href="{% url 'club_login' %}">
+        <button>Login as Club</button>
+    </a>
+
+    <h2>Register</h2>
+    <p>Don't have an account? Register below:</p>
+    <a href="{% url 'register_user' %}">
+        <button>Register as User</button>
+    </a>
+    <a href="{% url 'register_club' %}">
+        <button>Register as Club</button>
+    </a>
+</body>
+</html>

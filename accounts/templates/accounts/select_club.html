@@ -1,0 +1,12 @@
+<h2>Select Club</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Register</button>
+</form>
+
+<!-- Logout Button -->
+<form action="{% url 'user_logout' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+</form>
