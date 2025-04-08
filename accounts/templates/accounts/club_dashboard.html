@@ -4,23 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Club Dashboard</title>
+    <style>
+        /* Add some basic styling for messages */
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin: 1em 0;
+        }
+        .messages li {
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .messages .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+        .messages .warning {
+            background-color: #fcf8e3;
+            color: #8a6d3b;
+            border: 1px solid #faebcc;
+        }
+        .messages .error {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+    </style>
 </head>
 <body>
     <h1>Club Dashboard</h1>
     <p>Welcome, {{ club.name }}!</p>
 
+    <!-- Display messages here -->
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
     <!-- Online Members -->
     <h2>Online Members</h2>
     <ul>
         {% for member in online_members %}
-            <li>{{ member.username }} (MMR: {{ member.mmr }}, Played: {{ member.played_count }} times)</li>
+            <li>
+                {{ member.username }} (MMR: {{ member.mmr }}, Played: {{ member.played_count }} times)
+                <form action="{% url 'kick_user' member.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit">Kick</button>
+                </form>
+            </li>
         {% endfor %}
     </ul>
 
+    <!-- Rest of your template remains the same -->
     <!-- Create Random Match Button -->
     <form action="{% url 'create_random_match' %}" method="post">
         {% csrf_token %}
         <button type="submit">Create Random Match</button>
+    </form>
+
+    {% comment %} reset_count button {% endcomment %}
+    <form action="{% url 'reset_count' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Reset Played Count</button>
     </form>
 
     <!-- Match Score Forms -->

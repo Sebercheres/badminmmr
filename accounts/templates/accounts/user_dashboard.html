@@ -9,58 +9,52 @@
     <h1>User Dashboard</h1>
     <p>Welcome, {{ user.username }}!</p>
 
-    <!-- Club Selection Form (Displayed if no club is selected) -->
-    {% if not club %}
-        <h2>Select a Club</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Join Club</button>
-        </form>
-    {% else %}
-        <!-- Club Details (Displayed if a club is selected) -->
-        <p>Your Club: {{ club.name }}</p>
-        <p>Your MMR: {{ user.get_mmr_display }}</p>
 
-        <!-- Change Club Button -->
-        <form action="{% url 'change_club' %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Change Club</button>
-        </form>
 
-        <!-- Online Users List -->
-        <h3>Online Users</h3>
-        <ul>
-            {% for online_user in online_users %}
-                <li>{{ online_user.username }}</li>
-            {% endfor %}
-        </ul>
+    <h2>Select a Club</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Join Club</button>
+    </form>
 
-        <!-- Match History -->
-        <h2>Your Match History</h2>
-        {% for match in user_matches %}
-            <div>
-                <h3>Match: {{ match.team1 }} vs {{ match.team2 }}</h3>
-                <p>Score: {{ match.team1_score }} - {{ match.team2_score }}</p>
-                <p>Winner: {{ match.winner }}</p>
-                <p>Outcome: 
-                    {% if match.winner %}
-                        {% if user == match.winner.player1 or user == match.winner.player2 %}
-                            <span style="color: green;">Won</span>
-                        {% else %}
-                            <span style="color: red;">Lost</span>
-                        {% endif %}
-                    {% else %}
-                        <span style="color: gray;">Pending</span>
-                    {% endif %}
-                </p>
-                <p>Date Played: {{ match.date_played }}</p>
-            </div>
-        {% empty %}
-            <p>No match history available.</p>
+    <!-- User Details -->
+    <p>Your Club: {{ club.name }}</p>
+    <p>Your MMR: {{ user.mmr }}</p>
+    <p>Matches Played: {{ user.played_count }}</p>
+
+    <!-- Online Members -->
+    <h2>Online Members</h2>
+    <ul>
+        {% for member in online_members %}
+            <li>{{ member.username }} (MMR: {{ member.mmr }}, Played: {{ member.played_count }} times)</li>
         {% endfor %}
-        
-    {% endif %}
+    </ul>
+
+    <!-- Match History -->
+    <h2>Your Match History</h2>
+    {% for match in user_matches %}
+        <div>
+            <h3>Match: {{ match.team1 }} vs {{ match.team2 }}</h3>
+            <p>Score: {{ match.team1_score }} - {{ match.team2_score }}</p>
+            <p>Winner: {{ match.winner }}</p>
+            <p>Outcome: 
+                {% if match.winner %}
+                    {% if user == match.winner.player1 or user == match.winner.player2 %}
+                        <span style="color: green;">Won</span>
+                    {% else %}
+                        <span style="color: red;">Lost</span>
+                    {% endif %}
+                {% else %}
+                    <span style="color: gray;">Pending</span>
+                {% endif %}
+            </p>
+            <p>Date Played: {{ match.date_played }}</p>
+        </div>
+    {% empty %}
+        <p>No match history available.</p>
+    {% endfor %}
+
 
     <!-- Logout Button -->
     <form action="{% url 'user_logout' %}" method="post">

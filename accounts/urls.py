@@ -11,6 +11,9 @@ urlpatterns = [
     path('dashboard/', views.user_dashboard, name='user_dashboard'),
     path('club/dashboard/', views.club_dashboard, name='club_dashboard'),
     path('club/create-match/', views.create_random_match, name='create_random_match'),
+    path('club/reset_count', views.reset_count, name='reset_count'),
     path('match/<int:match_id>/record-result/', views.record_match_result, name='record_match_result'),
     path('change-club/', views.change_club, name='change_club'),
+    path('logout/', views.custom_logout, name='custom_logout'),  # Custom logout URL
+    path('kick-user/<int:user_id>/', views.kick_user, name='kick_user'),  # Kick user URL
 ]
