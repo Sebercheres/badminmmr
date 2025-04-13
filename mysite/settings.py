@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-tl4&-)^bq)^9z*h+4h4*kqigw*&i&)he=*4m9t6@y#vmr^f+v^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://badmin-mmr-calculator.onrender.com']
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Set session expiry to 3 hours (3 hours * 60 minutes * 60 seconds)
 SESSION_COOKIE_AGE = 3 * 60 * 60
@@ -78,15 +80,21 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'mydatabase_w6o3',
+#         'USER': 'myuser',
+#         'PASSWORD': 'RoDW0hhVzIoU0eagA9uv8JoCC1YvOMPT',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
+import os
+import dj_database_url
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mydatabase_w6o3',
-        'USER': 'myuser',
-        'PASSWORD': 'RoDW0hhVzIoU0eagA9uv8JoCC1YvOMPT',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
 
 # Password validation
