@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-tl4&-)^bq)^9z*h+4h4*kqigw*&i&)he=*4m9t6@y#vmr^f+v^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://badmin-mmr-calculator.onrender.com']
+ALLOWED_HOSTS = ['badmin-mmr-calculator.onrender.com', 'localhost']
+
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
