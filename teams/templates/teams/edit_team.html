@@ -1,0 +1,40 @@
+<div class="container">
+    <h2>Create a New Team</h2>
+    <form method="post" action="{% url 'edit_team' team.id %}">
+        {% csrf_token %}  <!-- CSRF token for security -->
+        
+        <!-- Display form fields -->
+        <div class="form-group">
+            <label for="{{ form.name.id_for_label }}">{{team.name}}</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <div class="alert alert-danger">
+                    {{ form.name.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.player1.id_for_label }}">{{team.player1}}</label>
+            {{ form.player1 }}
+            {% if form.player1.errors %}
+                <div class="alert alert-danger">
+                    {{ form.player1.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.player2.id_for_label }}">{{team.player2}}</label>
+            {{ form.player2 }}
+            {% if form.player2.errors %}
+                <div class="alert alert-danger">
+                    {{ form.player2.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Submit button -->
+        <button type="submit" class="btn btn-primary">Edit Team</button>
+    </form>
+</div>

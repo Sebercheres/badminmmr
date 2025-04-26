@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Dashboard</title>
+    <style>
+        /* Add some basic styling for messages */
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin: 1em 0;
+        }
+        .messages li {
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .messages .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+        .messages .warning {
+            background-color: #fcf8e3;
+            color: #8a6d3b;
+            border: 1px solid #faebcc;
+        }
+        .messages .error {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Club Dashboard</h1>
+    <p>Welcome, {{ club.name }}!</p>
+
+    <!-- Display messages here -->
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <!-- Online Members -->
+    <h2>Online Members</h2>
+    <ul>
+        {% for member in online_members %}
+            <li>
+                {{ member.username }} (MMR: {{ member.mmr }}, Played: {{ member.played_count }} times)
+                <form action="{% url 'kick_user' member.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit">Kick</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Rest of your template remains the same -->
+    <!-- Create Random Match Button -->
+    <form action="{% url 'create_random_match' club_id=club.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Create Random Match</button>
+    </form>
+
+    {% comment %} reset_count button {% endcomment %}
+    <form action="{% url 'reset_count' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Reset Played Count</button>
+    </form>
+
+    <!-- Create Team Form -->
+    <h2>Create Team</h2>
+    <form action="{% url 'create_team' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Create Team</button>
+    </form>
+
+    <h2>Teams</h2>
+    {% comment %} club_teams {% endcomment %}
+    <a href="{% url 'club_teams' club_id=club.id %}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-align: center; text-decoration: none; border-radius: 5px; transition: background-color 0.3s;">
+        View Teams
+    </a>
+
+
+    <!-- Match Score Forms -->
+    <h2>Matches</h2>
+    {% comment %} create_match {% endcomment %}
+    <form action="{% url 'create_match' club_id=club.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Create Match</button>
+    </form>
+
+    {% for match in matches %}
+        <div>
+            <h3>Match: {{ match.team1 }} (Average MMR: {{ match.team1.average_mmr }}) vs {{ match.team2 }} (Average MMR: {{ match.team2.average_mmr }})</h3>
+            <form action="{% url 'record_match_result' %}" method="post">
+                {% csrf_token %}
+                <label for="team1"></label>
+                <input type="hidden" name="team1" id="team1" value="{{match.team1.id}}">
+                <label for="team2"></label>
+                <input type="hidden" name="team2" id="team2" value="{{match.team2.id}}">
+
+                <div class="form-group">
+                    <label for="team1_score">Team 1 Score</label>
+                    <input type="number" name="team1_score" id="team1_score" class="form-control" min="0" required>
+                </div>
+        
+                <div class="form-group">
+                    <label for="team2_score">Team 2 Score</label>
+                    <input type="number" name="team2_score" id="team2_score" class="form-control" min="0" required>
+                </div>
+
+                <button type="submit">Submit Score</button>
+            </form>
+        </div>
+    {% empty %}
+        <p>No matches available.</p>
+    {% endfor %}
+
+    {% comment %} {% for match in matches %}
+        <div>
+            <h3>Match: {{ match.team1 }} (Average MMR: {{ match.team1.average_mmr }}) vs {{ match.team2 }} (Average MMR: {{ match.team2.average_mmr }})</h3>
+            <form action="{% url 'record_match_result' match.id %}" method="post">
+                {% csrf_token %}
+                <label for="team1_score_{{ match.id }}">Team 1 Score:</label>
+                <input type="number" id="team1_score_{{ match.id }}" name="team1_score" required>
+                <br>
+                <label for="team2_score_{{ match.id }}">Team 2 Score:</label>
+                <input type="number" id="team2_score_{{ match.id }}" name="team2_score" required>
+                <br>
+                <button type="submit">Submit Score</button>
+            </form>
+        </div>
+    {% empty %}
+        <p>No matches available.</p>
+    {% endfor %} {% endcomment %}
+
+    <!-- Match History -->
+    <h2>Match History</h2>
+    {% comment %} club match {% endcomment %}
+    <form action="{% url 'club_matches' club_id=club.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">View Club Match</button>
+    </form>
+    {% comment %} show the most reason 5 match history {% endcomment %}
+
+    {% for match in match_history %}
+        <div>
+            <h3>Match: {{ match.team1 }} (Average MMR: {{ match.team1.average_mmr }}) vs {{ match.team2 }} (Average MMR: {{ match.team2.average_mmr }})</h3>
+            <p>Score: {{ match.team1_score }} - {{ match.team2_score }}</p>
+            <p>Winner: {{ match.winner }}</p>
+            <p>Match Date: {{ match.created_at }}</p>
+        </div>
+    {% empty %}
+
+        <p>No matches found.</p>
+    {% endfor %}
+    <!-- Logout Button -->
+    <form action="{% url 'user_logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+</body>
+</html>

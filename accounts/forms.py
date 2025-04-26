@@ -1,6 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Club, User, Match
+from .models import User
+from clubs.models import Club
+from matches.models import Match
+
 
 # Club Registration Form
 class ClubRegistrationForm(UserCreationForm):

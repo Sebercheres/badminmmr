@@ -1,0 +1,23 @@
+<div class="container">
+    <h2>Edit Match</h2>
+    <h3>Match: {{ match.team1 }} (Average MMR: {{ match.team1.average_mmr }}) vs {{ match.team2 }} (Average MMR: {{ match.team2.average_mmr }})</h3>
+    <form method="post" action="{% url 'edit_match' club_id match.id %}">
+        {% csrf_token %}  <!-- CSRF token for security -->
+        <label for="team1"></label>
+        <input type="hidden" name="team1" id="team1" value="{{match.team1.id}}">
+        <label for="team2"></label>
+        <input type="hidden" name="team2" id="team2" value="{{match.team2.id}}">
+
+        <div class="form-group">
+            <label for="team1_score">Team 1 Score</label>
+            <input type="number" name="team1_score" id="team1_score" class="form-control" min="0" value="{{ match.team1_score }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="team2_score">Team 2 Score</label>
+            <input type="number" name="team2_score" id="team2_score" class="form-control" min="0" value="{{ match.team2_score }}" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Match</button>     
+    </form>
+</div>

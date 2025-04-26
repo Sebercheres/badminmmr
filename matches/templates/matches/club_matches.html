@@ -1,0 +1,57 @@
+<div class="container">
+    <h2>Matches for {{ club.name }}</h2>
+
+    <div class="mb-3">
+        <a href="{% url 'create_match' club.id %}" class="btn btn-primary">Create New Match</a>
+        <a href="{% url 'create_random_match' club.id %}" class="btn btn-secondary">Create Random Match</a>
+        <a href="{% url 'club_dashboard' %}">back to dashboard</a>
+    </div>
+
+    {% if matches %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Match</th>
+                    <th>Team 1</th>
+                    <th>Team 2</th>
+                    <th>Score</th>
+                    <th>Winner</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for match in matches %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ match.team1 }}</td>
+                        <td>{{ match.team2 }}</td>
+                        <td>{{ match.team1_score }} - {{ match.team2_score }}</td>
+                        <td>
+                            {% if match.winner %}
+                                {{ match.winner }}
+                            {% else %}
+                                Not decided
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'match_detail' club.id match.id %}" class="btn btn-info btn-sm">View Details</a>
+                        </td>
+                        {% comment %} <td>
+                            <a href="{% url 'edit_match' club.id match.id %}" class="btn btn-warning btn-sm">Edit Match</a>
+                        </td> {% endcomment %}
+                        <td>
+                            <form action="{% url 'delete_match' club.id match.id %}" method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success btn-sm">Delete Match</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-warning" role="alert">
+            No matches found for this club.
+        </div>
+    {% endif %}
+</div>

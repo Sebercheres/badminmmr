@@ -39,6 +39,9 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 INSTALLED_APPS = [
     'accounts',
+    'clubs',
+    'teams',
+    'matches',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -85,9 +88,9 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'mydatabase_w6o3',
+#         'NAME': 'mydatabase',
 #         'USER': 'myuser',
-#         'PASSWORD': 'RoDW0hhVzIoU0eagA9uv8JoCC1YvOMPT',
+#         'PASSWORD': 'mypassword',
 #         'HOST': 'localhost',
 #         'PORT': '5432',
 #     }
@@ -122,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Jakarta'
 
 USE_I18N = True
 
@@ -143,7 +146,7 @@ AUTH_USER_MODEL = 'accounts.User'
 LOGIN_URL = 'landing_page'
 
 AUTHENTICATION_BACKENDS = [
-    'accounts.backends.ClubAuthBackend',  # Custom backend for Club
+    'clubs.backends.ClubAuthBackend',  # Custom backend for Club
     'accounts.backends.UserAuthBackend',  # Custom backend for User
     'django.contrib.auth.backends.ModelBackend',  # Default backend (fallback)
 ]

@@ -1,0 +1,50 @@
+<div class="container">
+    <h2>Team Details</h2>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3>{{ team.name }}</h3>
+        </div>
+        <div class="card-body">
+            <p><strong>Player 1:</strong> {{ team.player1.username }} (MMR: {{ team.player1.mmr }})</p>
+            <p><strong>Player 2:</strong> {{ team.player2.username }} (MMR: {{ team.player2.mmr }})</p>
+            <p><strong>Average MMR:</strong> {{ team.average_mmr }}</p>
+            <p><strong>Played Count:</strong> {{ team.times_played }}</p>
+            <p><strong>Win Count:</strong> {{ team.wins }}</p>
+            <p><strong>Loss Count:</strong> {{ team.losses }}</p>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Player 1 MMR Change</th>
+                    <th>Player 2 MMR Change</th>
+                    <th>Match Details</th>
+                </tr>
+            </thead>
+            <tbody>  
+                {% for details in team_details %}
+                    <tr>
+                        <td>{{ details.player1_mmr_change }}</td>
+                        <td>{{ details.player2_mmr_change }}</td>
+                        <td><a href="{% url 'match_detail' club_id details.match.id %}">match detail</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <div class="card-footer">
+            <a href="{% url 'edit_team' team.id %}" class="btn btn-warning">Edit Team</a>
+            <form action="{% url 'delete_team' team.id %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete Team</button>
+            </form>
+        </div>
+        
+
+        <div class="card-footer">
+            <a href="{% url 'create_team' %}" class="btn btn-primary">Create New Team</a>
+            <a href="{% url 'club_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+            <a href="{% url 'club_teams' club_id=team.club.id %}" class="btn btn-secondary">View Teams</a>
+        </div>
+    </div>
+</div>

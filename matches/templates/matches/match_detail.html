@@ -1,0 +1,46 @@
+<div class="container">
+    <h1>Match Details</h1>
+    
+    <div class="match-info">
+        <h2>{{ match.team1 }} vs {{ match.team2 }}</h2>
+        <p><strong>Score:</strong> {{ match.team1_score }} - {{ match.team2_score }}</p>
+        
+        {% if match.winner %}
+            <p><strong>Winner:</strong> {{ match.winner }}</p>
+            <p><strong>Loser:</strong> {{ match.loser }}</p>
+        {% else %}
+            <p><strong>Result:</strong> Draw</p>
+        {% endif %}
+        
+        <p><strong>Match Date:</strong> {{ match.created_at|date:"F j, Y, g:i a" }}</p>
+    </div>
+
+    <div class="team-details">
+        <h3>Team 1 Details</h3>
+        <p><strong>Team Name:</strong> {{ match.team1.name }}</p>
+        <p><strong>Player 1:</strong> {{ match.team1.player1 }}</p>
+        <p><strong>Player 1 changed mmr</strong>: {{ team_winner.player1_mmr_change }}</p>
+        <p><strong>Player 2:</strong> {{ match.team1.player2 }}</p>
+        <p><strong>Player 2 changed mmr</strong>: {{ team_winner.player2_mmr_change }}</p>
+        <p><strong>Average MMR:</strong> {{ match.team1.average_mmr }}</p>
+        <p><strong>Played Count:</strong> {{ match.team1.times_played }}</p>
+        <p><strong>Win Count:</strong> {{ match.team1.wins }}</p>
+        <p><strong>Loss Count:</strong> {{ match.team1.losses }}</p>
+
+        
+        <h3>Team 2 Details</h3>
+        <p><strong>Team Name:</strong> {{ match.team2.name }}</p>
+        <p><strong>Player 1:</strong> {{ match.team2.player1 }}</p>
+        <p><strong>Player 1 changed mmr</strong>: {{ team_loser.player1_mmr_change }}</p>
+        <p><strong>Player 2:</strong> {{ match.team2.player2 }}</p>
+        <p><strong>Player 2 changed mmr</strong>: {{ team_loser.player2_mmr_change }}</p>
+        <p><strong>Average MMR:</strong> {{ match.team2.average_mmr }}</p>
+        <p><strong>Played Count:</strong> {{ match.team2.times_played }}</p>
+        <p><strong>Win Count:</strong> {{ match.team2.wins }}</p>
+        <p><strong>Loss Count:</strong> {{ match.team2.losses }}</p>
+    </div>
+
+    <div class="actions">
+        <a href="{% url 'club_matches' club.id %}" class="btn btn-primary">Back to Matches</a>
+    </div>
+</div>

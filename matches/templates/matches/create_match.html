@@ -1,0 +1,39 @@
+<div class="container">
+    <h2>Create a New Match</h2>
+    
+    <form method="post" action="{% url 'create_match' club_id=club_id %}">
+        {% csrf_token %}  <!-- CSRF token for security -->
+        
+        <div class="form-group">
+            <label for="team1">Select Team 1</label>
+            <select name="team1" id="team1" class="form-control" required>
+                <option value="">-- Select Team 1 --</option>
+                {% for team in teams %}
+                    <option value="{{ team.id }}">{{ team.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="team2">Select Team 2</label>
+            <select name="team2" id="team2" class="form-control" required>
+                <option value="">-- Select Team 2 --</option>
+                {% for team in teams %}
+                    <option value="{{ team.id }}">{{ team.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="team1_score">Team 1 Score</label>
+            <input type="number" name="team1_score" id="team1_score" class="form-control" min="0" required>
+        </div>
+
+        <div class="form-group">
+            <label for="team2_score">Team 2 Score</label>
+            <input type="number" name="team2_score" id="team2_score" class="form-control" min="0" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Match</button>
+    </form>
+</div>
