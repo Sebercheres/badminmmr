@@ -11,6 +11,7 @@ from django.shortcuts import redirect
 from .forms import TeamCreationForm
 
 from .models import Team, TeamDetail
+from accounts.models import User
 from clubs.models import Club
 
 @login_required
@@ -26,7 +27,9 @@ def create_team(request):
             return redirect("team_detail", team_id=team.id)
     else:
         form = TeamCreationForm()
-    return render(request, "teams/create_team.html", {"form": form})
+    
+    players = User.objects.filter(club=request.user, is_active=True)
+    return render(request, "teams/create_team.html", {"form": form, "players": players})
 
 @login_required
 def team_detail(request, team_id):

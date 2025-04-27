@@ -1,7 +1,7 @@
 <div class="container">
     <h2>Create a New Team</h2>
     <form method="post" action="{% url 'create_team' %}">
-        {% csrf_token %}  <!-- CSRF token for security -->
+        {% csrf_token %}
         
         <!-- Display form fields -->
         <div class="form-group">
@@ -16,7 +16,12 @@
 
         <div class="form-group">
             <label for="{{ form.player1.id_for_label }}">Player 1</label>
-            {{ form.player1 }}
+            <select name="player1" id="player1" class="form-control" required>
+                <option value="">-- Select Player 1 --</option>
+                {% for player in players %}
+                    <option value="{{ player.id }}">{{ player.username }}</option>  <!-- Ensure you are using the correct field for display -->
+                {% endfor %}
+            </select>
             {% if form.player1.errors %}
                 <div class="alert alert-danger">
                     {{ form.player1.errors }}
@@ -26,7 +31,12 @@
 
         <div class="form-group">
             <label for="{{ form.player2.id_for_label }}">Player 2</label>
-            {{ form.player2 }}
+            <select name="player2" id="player2" class="form-control" required>
+                <option value="">-- Select Player 2 --</option>
+                {% for player in players %}
+                    <option value="{{ player.id }}">{{ player.username }}</option>  <!-- Ensure you are using the correct field for display -->
+                {% endfor %}
+            </select>
             {% if form.player2.errors %}
                 <div class="alert alert-danger">
                     {{ form.player2.errors }}
