@@ -47,9 +47,6 @@ class Match(models.Model):
             
             super().save(*args, **kwargs)
     
-    def edit(self):
-        pass
-        self.save()
             
     def delete(self, *args, **kwargs):
         with transaction.atomic():

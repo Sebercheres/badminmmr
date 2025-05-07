@@ -15,29 +15,47 @@
         <p><strong>Match Date:</strong> {{ match.created_at|date:"F j, Y, g:i a" }}</p>
     </div>
 
-    <div class="team-details">
-        <h3>Team 1 Details</h3>
-        <p><strong>Team Name:</strong> {{ match.team1.name }}</p>
-        <p><strong>Player 1:</strong> {{ match.team1.player1 }}</p>
-        <p><strong>Player 1 changed mmr</strong>: {{ team_winner.player1_mmr_change }}</p>
-        <p><strong>Player 2:</strong> {{ match.team1.player2 }}</p>
-        <p><strong>Player 2 changed mmr</strong>: {{ team_winner.player2_mmr_change }}</p>
-        <p><strong>Average MMR:</strong> {{ match.team1.average_mmr }}</p>
-        <p><strong>Played Count:</strong> {{ match.team1.times_played }}</p>
-        <p><strong>Win Count:</strong> {{ match.team1.wins }}</p>
-        <p><strong>Loss Count:</strong> {{ match.team1.losses }}</p>
-
-        
-        <h3>Team 2 Details</h3>
-        <p><strong>Team Name:</strong> {{ match.team2.name }}</p>
-        <p><strong>Player 1:</strong> {{ match.team2.player1 }}</p>
-        <p><strong>Player 1 changed mmr</strong>: {{ team_loser.player1_mmr_change }}</p>
-        <p><strong>Player 2:</strong> {{ match.team2.player2 }}</p>
-        <p><strong>Player 2 changed mmr</strong>: {{ team_loser.player2_mmr_change }}</p>
-        <p><strong>Average MMR:</strong> {{ match.team2.average_mmr }}</p>
-        <p><strong>Played Count:</strong> {{ match.team2.times_played }}</p>
-        <p><strong>Win Count:</strong> {{ match.team2.wins }}</p>
-        <p><strong>Loss Count:</strong> {{ match.team2.losses }}</p>
+    <div class="team-info" style="display: flex; justify-content:center; margin-top: 20px;">
+        <div>
+            <h3>Team 1 Details</h3>
+            <p><strong>Team Name:</strong> {{ match.team1.name }}</p>
+            <br>
+            <p><strong>Player 1:</strong> {{ match.team1.player1 }}</p>
+            <p><strong>player 1 mmr</strong>: {{ match.team1.player1.mmr }}</p>
+            <p><strong>player 1 matched played</strong>: {{ match.team1.player1.matched_played_count }}</p>
+            <p><strong>Player 1 changed mmr</strong>: {{ team_winner.player1_mmr_change }}</p>
+            <br>
+            <p><strong>Player 2:</strong> {{ match.team1.player2 }}</p>
+            <p><strong>Player 2 mmr</strong>: {{ match.team1.player2.mmr }}</p>
+            <p><strong>Player 2 matched played</strong>: {{ match.team1.player2.matched_played_count }}</p>
+            <p><strong>Player 2 changed mmr</strong>: {{ team_winner.player2_mmr_change }}</p>
+            <br>
+            <p><strong>Average MMR:</strong> {{ match.team1.average_mmr }}</p>
+            <p><strong>Played Count:</strong> {{ match.team1.times_played }}</p>
+            <p><strong>Win Count:</strong> {{ match.team1.wins }}</p>
+            <p><strong>Loss Count:</strong> {{ match.team1.losses }}</p>
+        </div>
+        <div>
+            <h3>Team 2 Details</h3>
+            <p><strong>Team Name:</strong> {{ match.team2.name }}</p>
+            <br>
+            <p><strong>Player 1:</strong> {{ match.team2.player1 }}</p>
+            <p><strong>Player 1 mmr</strong>: {{ match.team2.player1.mmr }}</p>
+            <p><strong>Player 1 matched played</strong>: {{ match.team2.player1.matched_played_count }}</p>
+            <p><strong>Player 1 changed mmr</strong>: {{ team_loser.player1_mmr_change }}</p>
+            
+            <br>
+            <p><strong>Player 2:</strong> {{ match.team2.player2 }}</p>
+            <p><strong>Player 2 mmr</strong>: {{ match.team2.player2.mmr }}</p>
+            <p><strong>Player 2 matched played</strong>: {{ match.team2.player2.matched_played_count }}</p>
+            <p><strong>Player 2 changed mmr</strong>: {{ team_loser.player2_mmr_change }}</p>
+            
+            <br>
+            <p><strong>Average MMR:</strong> {{ match.team2.average_mmr }}</p>
+            <p><strong>Played Count:</strong> {{ match.team2.times_played }}</p>
+            <p><strong>Win Count:</strong> {{ match.team2.wins }}</p>
+            <p><strong>Loss Count:</strong> {{ match.team2.losses }}</p>
+        </div>
     </div>
 
     <div class="actions">

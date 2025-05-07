@@ -98,47 +98,29 @@
     {% for match in matches %}
         <div>
             <h3>Match: {{ match.team1 }} (Average MMR: {{ match.team1.average_mmr }}) vs {{ match.team2 }} (Average MMR: {{ match.team2.average_mmr }})</h3>
-            <form action="{% url 'record_match_result' %}" method="post">
-                {% csrf_token %}
+            <form method="post" action="{% url 'edit_match' club.id match.id %}">
+                {% csrf_token %}  <!-- CSRF token for security -->
                 <label for="team1"></label>
                 <input type="hidden" name="team1" id="team1" value="{{match.team1.id}}">
                 <label for="team2"></label>
                 <input type="hidden" name="team2" id="team2" value="{{match.team2.id}}">
-
+        
                 <div class="form-group">
                     <label for="team1_score">Team 1 Score</label>
-                    <input type="number" name="team1_score" id="team1_score" class="form-control" min="0" required>
+                    <input type="number" name="team1_score" id="team1_score" class="form-control" min="0" value="{{ match.team1_score }}" required>
                 </div>
         
                 <div class="form-group">
                     <label for="team2_score">Team 2 Score</label>
-                    <input type="number" name="team2_score" id="team2_score" class="form-control" min="0" required>
+                    <input type="number" name="team2_score" id="team2_score" class="form-control" min="0" value="{{ match.team2_score }}" required>
                 </div>
-
-                <button type="submit">Submit Score</button>
+        
+                <button type="submit" class="btn btn-primary">Update Match</button>     
             </form>
         </div>
     {% empty %}
         <p>No matches available.</p>
     {% endfor %}
-
-    {% comment %} {% for match in matches %}
-        <div>
-            <h3>Match: {{ match.team1 }} (Average MMR: {{ match.team1.average_mmr }}) vs {{ match.team2 }} (Average MMR: {{ match.team2.average_mmr }})</h3>
-            <form action="{% url 'record_match_result' match.id %}" method="post">
-                {% csrf_token %}
-                <label for="team1_score_{{ match.id }}">Team 1 Score:</label>
-                <input type="number" id="team1_score_{{ match.id }}" name="team1_score" required>
-                <br>
-                <label for="team2_score_{{ match.id }}">Team 2 Score:</label>
-                <input type="number" id="team2_score_{{ match.id }}" name="team2_score" required>
-                <br>
-                <button type="submit">Submit Score</button>
-            </form>
-        </div>
-    {% empty %}
-        <p>No matches available.</p>
-    {% endfor %} {% endcomment %}
 
     <!-- Match History -->
     <h2>Match History</h2>

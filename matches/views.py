@@ -240,13 +240,71 @@ def edit_match(request, club_id, match_id):
     teams = Team.objects.filter(club_id=club_id)
     if request.method == 'POST':
         # Update match details here if needed
-        # For example, you might want to update team names or other attributes
-        match.team1_score = request.POST.get('team1_score')
-        match.team2_score = request.POST.get('team2_score')
-        match.edit()
+        flag = True if match.winner and match.loser else False
+        if flag:
+            old_team_detail_winner = TeamDetail.objects.get(team=match.winner, match=match)
+            old_team_detail_loser = TeamDetail.objects.get(team=match.loser, match=match)
+            old_team_detail_winner.reverse_player_mmr(match.winner.player1, old_team_detail_winner.player1_mmr_change)
+            old_team_detail_winner.reverse_player_mmr(match.winner.player2, old_team_detail_winner.player2_mmr_change)
+            old_team_detail_loser.reverse_player_mmr(match.loser.player1, old_team_detail_loser.player1_mmr_change)
+            old_team_detail_loser.reverse_player_mmr(match.loser.player2, old_team_detail_loser.player2_mmr_change)
+            
         
+        # Convert scores to integers
+        try:
+            match.team1_score = int(request.POST.get('team1_score', 0))  # Default to 0 if not provided
+            match.team2_score = int(request.POST.get('team2_score', 0))  # Default to 0 if not provided
+        except ValueError:
+            messages.error(request, "Invalid score input. Please enter numeric values.")
+            return render(request, 'matches/edit_match.html', {'match': match, 'club_id': club_id, 'teams': teams})
+        match.save() 
+        
+        avg_rating_winner = match.winner.get_average_mmr()
+        avg_rating_loser = match.loser.get_average_mmr()
+        
+        winner_score = match.team1_score if match.winner == match.team1 else match.team2_score
+        loser_score = match.team2_score if match.winner == match.team1 else match.team1_score
+        
+        match_played_count_winner_player1 = match.winner.player1.matched_played_count
+        winner_player1_mmr_change= math.ceil(calculate_player_mmr_change(match.winner.player1.mmr, winner_score, loser_score, 1, avg_rating_loser, match_played_count_winner_player1))
+        
+        match_played_count_winner_player2 = match.winner.player2.matched_played_count
+        winner_player2_mmr_change = math.ceil(calculate_player_mmr_change(match.winner.player2.mmr, winner_score, loser_score, 1, avg_rating_loser, match_played_count_winner_player2))
+        
+        match_played_count_loser_player1 = match.loser.player1.matched_played_count
+        loser_player1_mmr_change = math.ceil(calculate_player_mmr_change(match.loser.player1.mmr, loser_score, winner_score, 0, avg_rating_winner, match_played_count_loser_player1))
+        
+        match_played_count_loser_player2 = match.loser.player2.matched_played_count
+        loser_player2_mmr_change = math.ceil(calculate_player_mmr_change(match.loser.player2.mmr, loser_score, winner_score, 0, avg_rating_winner, match_played_count_loser_player2))
+        
+        
+        
+        if flag:
+            winner_team_detail = TeamDetail.objects.get(team=match.winner, match=match)
+            loser_team_detail = TeamDetail.objects.get(team=match.loser, match=match)
+            winner_team_detail.player1_mmr_change = winner_player1_mmr_change
+            winner_team_detail.player2_mmr_change = winner_player2_mmr_change
+            winner_team_detail.save()
+            loser_team_detail.player1_mmr_change = loser_player1_mmr_change
+            loser_team_detail.player2_mmr_change = loser_player2_mmr_change
+            loser_team_detail.save()
+        else:
+            # Create TeamDetail instances
+            match.update_played()
+            TeamDetail.objects.create(
+                team=match.winner,
+                match=match,
+                player1_mmr_change=winner_player1_mmr_change,
+                player2_mmr_change=winner_player2_mmr_change
+            )
+            TeamDetail.objects.create(
+                team=match.loser,
+                match=match,
+                player1_mmr_change=loser_player1_mmr_change,
+                player2_mmr_change=loser_player2_mmr_change
+            )
+            
         return redirect('match_detail', club_id=club_id, match_id=match.id)
-        pass  # Placeholder for actual update logic
     return render(request, 'matches/edit_match.html', {'match': match, 'club_id': club_id, 'teams': teams})
 
 def calculate_expected_outcome(R, avg_rating):
