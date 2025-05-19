@@ -33,7 +33,7 @@ db.sqlite3
 /static
 
 # Local settings
-settings.py
+# settings.py
 
 # IDEs and editors
 .idea/
