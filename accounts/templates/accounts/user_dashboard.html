@@ -26,7 +26,7 @@
     <!-- Online Members -->
     <h2>Online Members</h2>
     <ul>
-        {% for member in online_members %}
+        {% for member in online_users %}
             <li>{{ member.username }} (MMR: {{ member.mmr }}, Played: {{ member.played_count }} times)</li>
         {% endfor %}
     </ul>

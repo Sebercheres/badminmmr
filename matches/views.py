@@ -19,14 +19,14 @@ from django.shortcuts import redirect
 
 import random
 import math
-from .forms import MatchResultForm, MatchCreationForm
+from .forms import MatchCreationForm, MatchResultForm
 
 
 
 @login_required
 def record_match_result(request):
     if request.method == 'POST':
-        form = MatchCreationForm(request.POST)
+        form = MatchResultForm(request.POST)
         if form.is_valid():
             with transaction.atomic():
                 match = form.save(commit=True)  # Save the match, which now includes scores
@@ -72,7 +72,7 @@ def record_match_result(request):
                 messages.success(request, "Match created successfully.")
                 return redirect('club_dashboard')
     else:
-        form = MatchCreationForm()
+        form = MatchResultForm()
 
     return redirect('club_dashboard')  # Redirect back to Club Dashboard
 
@@ -330,15 +330,20 @@ def calculate_player_mmr_change(R, STA, STB, W, avg_rating, num_matches):
     K = 42
     return update_rating(R, STA, STB, W, avg_rating, K, num_matches)
 
+@login_required
 def create_match(request, club_id):
+    club = get_object_or_404(Club, id=club_id)
+    
     if request.method == 'POST':
-        form = MatchCreationForm(request.POST)
+        form = MatchCreationForm(request.POST, club=club)  # Pass club to the form
         if form.is_valid():
+            print("Form is valid")
             with transaction.atomic():
                 # Save the match, which now includes scores
                 match = form.save(commit=True)  # Save the match, which now includes scores
                 match.update_played()  # Update the match to set winner and loser
                 
+                print(match.winner, match.loser)
                 # Create TeamDetail instances for winner and loser
                 if match.winner and match.loser:
                     # Calculate average ratings for both teams
@@ -347,6 +352,7 @@ def create_match(request, club_id):
                     
                     winner_score = match.team1_score if match.winner == match.team1 else match.team2_score
                     loser_score = match.team2_score if match.winner == match.team1 else match.team1_score
+                    print(winner_score, loser_score)
                     
                     match_played_count_winner_player1 = match.winner.player1.matched_played_count
                     winner_player1_mmr_change= math.ceil(calculate_player_mmr_change(match.winner.player1.mmr, winner_score, loser_score, 1, avg_rating_loser, match_played_count_winner_player1))
@@ -380,9 +386,9 @@ def create_match(request, club_id):
                 messages.success(request, "Match created successfully.")
                 return redirect('club_matches', club_id=club_id)
     else:
-        form = MatchCreationForm()
+        form = MatchCreationForm(club=club)  # Pass club to the formx   x   
     
-    # Fetch teams associated with the club
-    teams = Team.objects.filter(club_id=club_id)
-
-    return render(request, 'matches/create_match.html', {'club_id': club_id, 'teams': teams, 'form': form})
+    # Fetch players associated with the club
+    players = User.objects.filter(club=club, is_online=True).order_by('played_count')
+    
+    return render(request, 'matches/create_match.html', {'club_id': club_id, 'form': form, 'players': players})
